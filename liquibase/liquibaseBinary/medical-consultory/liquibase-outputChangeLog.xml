@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    
+    <changeSet author="marko (generated)" id="1582779342352-3">
+        <createTable tableName="patient">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="date"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="phone" type="VARCHAR(45)"/>
+            <column name="address" type="VARCHAR(250)"/>
+            <column name="zip_code" type="VARCHAR(45)"/>
+            <column name="gender" type="VARCHAR(1)"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="create_date" type="datetime"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_date" type="datetime"/>
+            <column name="create_by" type="INT"/>
+            <column name="update_by" type="INT"/>
+            <column name="active" type="VARCHAR(1)"/>
+        </createTable>
+    </changeSet>
+    
+    
+
+    <changeSet author="marko (generated)" id="1582853502738-3">
+        <loadData commentLineStartsWith="#" encoding="UTF-8" file="medical-consultory//data//patient.csv" quotchar="&quot;" separator="," tableName="patient">
+            <column header="id" name="id" type="NUMERIC"/>
+            <column header="first_name" name="first_name" type="STRING"/>
+            <column header="last_name" name="last_name" type="STRING"/>
+            <column header="date_of_birth" name="date_of_birth" type="skip"/>
+            <column header="email" name="email" type="skip"/>
+            <column header="phone" name="phone" type="skip"/>
+            <column header="address" name="address" type="skip"/>
+            <column header="zip_code" name="zip_code" type="skip"/>
+            <column header="gender" name="gender" type="skip"/>
+            <column header="create_date" name="create_date" type="DATE"/>
+            <column header="update_date" name="update_date" type="DATE"/>
+            <column header="create_by" name="create_by" type="NUMERIC"/>
+            <column header="update_by" name="update_by" type="NUMERIC"/>
+            <column header="active" name="active" type="STRING"/>
+        </loadData>
+    </changeSet>
+   
+</databaseChangeLog>

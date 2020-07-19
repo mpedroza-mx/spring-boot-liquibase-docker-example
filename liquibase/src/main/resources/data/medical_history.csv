@@ -1,0 +1,2 @@
+"id","patient_id","allergies_description","anesthetic_reactions_description","family_history_description","active","creation_date","created_by","last_update_date","last_updated_by"
+"5","1","string","string","string","Y","2020-02-13T21:47:59","1","2020-02-13T21:47:59","1"

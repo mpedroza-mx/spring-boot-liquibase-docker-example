@@ -1,0 +1,3 @@
+"id","medical_history_id","current_diseases","current_treatment","current_dental_treatment","current_medications","current_treatment_duration","is_pregnant","last_four_hour_period_food","contraindications","pain","sensibility","radiographics_test","color","pulp_sensibility","diagnostic_from_visit","treatment_plan_from_visit","creation_date","created_by","last_update_date","last_updated_by","active"
+"1","5","string","string","string","string","string","Y","Y","string","string","string","string","Y","string","string","string","2020-02-13T21:58:12","1","2020-02-13T21:58:12","1","Y"
+"2","5","string","string","string","string","string","Y","Y","string","string","string","string","Y","string","string","string","2020-02-13T22:12:00","1","2020-02-13T22:12:00","1","Y"

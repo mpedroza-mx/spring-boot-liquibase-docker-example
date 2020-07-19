@@ -1,0 +1,187 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="marko (generated)" id="1582779342352-1">
+        <createTable tableName="appointment">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="patient_id" type="INT"/>
+            <column name="start_time" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_time" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="VARCHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-2">
+        <createTable tableName="medical_history">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="patient_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="allergies_description" type="LONGTEXT"/>
+            <column name="anesthetic_reactions_description" type="LONGTEXT"/>
+            <column name="family_history_description" type="LONGTEXT"/>
+            <column name="active" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="creation_date" type="datetime"/>
+            <column name="created_by" type="INT"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="last_update_date" type="datetime"/>
+            <column name="last_updated_by" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-3">
+        <createTable tableName="patient">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="date"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="phone" type="VARCHAR(45)"/>
+            <column name="address" type="VARCHAR(250)"/>
+            <column name="zip_code" type="VARCHAR(45)"/>
+            <column name="gender" type="VARCHAR(1)"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="create_date" type="datetime"/>
+            <column name="update_date" type="datetime"/>
+            <column name="created_by" type="INT"/>
+            <column name="updated_by" type="INT"/>
+            <column name="active" type="VARCHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-4">
+        <createTable tableName="revision">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="medical_history_id" type="INT"/>
+            <column name="current_diseases" type="LONGTEXT"/>
+            <column name="current_treatment" type="LONGTEXT"/>
+            <column name="current_dental_treatment" type="LONGTEXT"/>
+            <column name="current_medications" type="LONGTEXT"/>
+            <column name="current_treatment_duration" type="VARCHAR(45)"/>
+            <column name="is_pregnant" type="VARCHAR(1)"/>
+            <column name="last_four_hour_period_food" type="VARCHAR(1)"/>
+            <column name="contraindications" type="LONGTEXT"/>
+            <column name="pain" type="LONGTEXT"/>
+            <column name="sensibility" type="LONGTEXT"/>
+            <column name="radiographics_test" type="LONGTEXT"/>
+            <column name="color" type="LONGTEXT"/>
+            <column name="pulp_sensibility" type="LONGTEXT"/>
+            <column name="diagnostic_from_visit" type="LONGTEXT"/>
+            <column name="treatment_plan_from_visit" type="LONGTEXT"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="creation_date" type="datetime"/>
+            <column name="created_by" type="INT"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="last_update_date" type="datetime"/>
+            <column name="last_updated_by" type="INT"/>
+            <column name="active" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-5">
+        <createIndex indexName="medical_history_foreign_key_idx" tableName="revision">
+            <column name="medical_history_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-6">
+        <createIndex indexName="patient_id_foreign_key_idx" tableName="medical_history">
+            <column name="patient_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-7">
+        <createIndex indexName="patient_id_key_idx" tableName="appointment">
+            <column name="patient_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-8">
+        <addForeignKeyConstraint baseColumnNames="medical_history_id" baseTableName="revision" constraintName="medical_history_foreign_key" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="medical_history" validate="true"/>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-9">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="medical_history" constraintName="patient_id_foreign_key" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582779342352-10">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="appointment" constraintName="patient_id_key" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+
+    <changeSet author="marko (generated)" id="1582853502738-3">
+        <loadData commentLineStartsWith="#" encoding="UTF-8" file="src/main/resources//data//patient.csv" quotchar="&quot;" separator="," tableName="patient">
+            <column header="id" name="id" type="NUMERIC"/>
+            <column header="first_name" name="first_name" type="STRING"/>
+            <column header="last_name" name="last_name" type="STRING"/>
+            <column header="date_of_birth" name="date_of_birth" type="skip"/>
+            <column header="email" name="email" type="skip"/>
+            <column header="phone" name="phone" type="skip"/>
+            <column header="address" name="address" type="skip"/>
+            <column header="zip_code" name="zip_code" type="skip"/>
+            <column header="gender" name="gender" type="skip"/>
+            <column header="create_date" name="create_date" type="DATE"/>
+            <column header="update_date" name="update_date" type="DATE"/>
+            <column header="created_by" name="created_by" type="NUMERIC"/>
+            <column header="updated_by" name="updated_by" type="NUMERIC"/>
+            <column header="active" name="active" type="STRING"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet author="marko (generated)" id="1582853502738-1">
+        <loadData commentLineStartsWith="#" encoding="UTF-8" file="src/main/resources//data//appointment.csv" quotchar="&quot;" separator="," tableName="appointment">
+            <column header="id" name="id" type="NUMERIC"/>
+            <column header="patient_id" name="patient_id" type="NUMERIC"/>
+            <column header="start_time" name="start_time" type="NUMERIC"/>
+            <column header="end_time" name="end_time" type="NUMERIC"/>
+            <column header="active" name="active" type="STRING"/>
+        </loadData>
+    </changeSet>
+    <changeSet author="marko (generated)" id="1582853502738-2">
+        <loadData commentLineStartsWith="#" encoding="UTF-8" file="src/main/resources//data//medical_history.csv" quotchar="&quot;" separator="," tableName="medical_history">
+            <column header="id" name="id" type="NUMERIC"/>
+            <column header="patient_id" name="patient_id" type="NUMERIC"/>
+            <column header="allergies_description" name="allergies_description" type="STRING"/>
+            <column header="anesthetic_reactions_description" name="anesthetic_reactions_description" type="STRING"/>
+            <column header="family_history_description" name="family_history_description" type="STRING"/>
+            <column header="active" name="active" type="STRING"/>
+            <column header="creation_date" name="creation_date" type="DATE"/>
+            <column header="created_by" name="created_by" type="NUMERIC"/>
+            <column header="last_update_date" name="last_update_date" type="DATE"/>
+            <column header="last_updated_by" name="last_updated_by" type="NUMERIC"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet author="marko (generated)" id="1582853502738-4">
+        <loadData commentLineStartsWith="#" encoding="UTF-8" file="src/main/resources//data//revision.csv" quotchar="&quot;" separator="," tableName="revision">
+            <column header="id" name="id" type="NUMERIC"/>
+            <column header="medical_history_id" name="medical_history_id" type="NUMERIC"/>
+            <column header="current_diseases" name="current_diseases" type="STRING"/>
+            <column header="current_treatment" name="current_treatment" type="STRING"/>
+            <column header="current_dental_treatment" name="current_dental_treatment" type="STRING"/>
+            <column header="current_medications" name="current_medications" type="STRING"/>
+            <column header="current_treatment_duration" name="current_treatment_duration" type="STRING"/>
+            <column header="is_pregnant" name="is_pregnant" type="STRING"/>
+            <column header="last_four_hour_period_food" name="last_four_hour_period_food" type="STRING"/>
+            <column header="contraindications" name="contraindications" type="STRING"/>
+            <column header="pain" name="pain" type="STRING"/>
+            <column header="sensibility" name="sensibility" type="STRING"/>
+            <column header="radiographics_test" name="radiographics_test" type="STRING"/>
+            <column header="color" name="color" type="STRING"/>
+            <column header="pulp_sensibility" name="pulp_sensibility" type="STRING"/>
+            <column header="diagnostic_from_visit" name="diagnostic_from_visit" type="STRING"/>
+            <column header="treatment_plan_from_visit" name="treatment_plan_from_visit" type="STRING"/>
+            <column header="creation_date" name="creation_date" type="DATE"/>
+            <column header="created_by" name="created_by" type="NUMERIC"/>
+            <column header="last_update_date" name="last_update_date" type="DATE"/>
+            <column header="last_updated_by" name="last_updated_by" type="NUMERIC"/>
+            <column header="active" name="active" type="STRING"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

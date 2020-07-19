@@ -1,0 +1,111 @@
+version: '3'
+services:
+
+  service-discovery:
+    container_name: service-discovery
+    image: "service-discovery:service-discovery"
+    build: ./service-discovery
+    ports:
+      - "8082:8082"
+    networks:      
+      - back-tier    
+    environment:
+      - eureka_client_serviceUrl_defaultZone=http://service-discovery:8082/eureka/
+      - spring_cloud_config_uri=http://config:8081              
+    command: sh -c "dockerize -wait tcp://config:8081 -timeout 600s -wait-retry-interval 60s java -jar service-discovery-0.0.1-SNAPSHOT.jar"    
+
+  config:
+    container_name: config
+    image: "config:config"
+    build: ./config
+    ports:
+      - "8081:8081"
+    networks:      
+      - back-tier        
+    environment:
+      - eureka_client_serviceUrl_defaultZone=http://service-discovery:8082/eureka/
+      - eureka_client_registryFetchIntervalSeconds=3
+      - spring_zipkin_baseUrl=http://zipkin:9411/
+    command: sh -c "dockerize -wait tcp://mysqlDb:3306 -timeout 300s -wait-retry-interval 10s java -jar config-0.0.1-SNAPSHOT.jar"    
+
+  mysqlDb:
+    image: mysql/mysql-server:latest
+    container_name: mysqlDb
+    ports:
+      - "3306:3306"
+    volumes:
+      - /data/mysql
+    networks:
+      - back-tier
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=medical-consultory
+        - MYSQL_ROOT_HOST=%
+
+  dbAdminUI:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: dbAdminUI
+    ports:
+      - "9090:80"
+    networks:      
+      - back-tier    
+    environment:
+      - PMA_HOST=mysqlDb 
+
+  dbTablesAndDataBuilder:
+    container_name: dbtabblesanddatabuilder
+    image: "dbtabblesanddatabuilder:dbtabblesanddatabuilder"      
+    build:
+      context: ./liquibase
+    networks:      
+      - back-tier
+    command: sh -c "dockerize -wait tcp://mysqlDb:3306 -timeout 300s -wait-retry-interval 10s java -cp \".:/usr/local/src/liquibaseBinary/liquibase.jar:/usr/local/src/liquibaseBinary/lib/commons-cli-1.4.jar:/usr/local/src/liquibaseBinary/lib/h2-1.4.200.jar:/usr/local/src/liquibaseBinary/lib/jaxb-api-2.3.0.jar:/usr/local/src/liquibaseBinary/lib/jaxb-core-2.3.0.jar:/usr/local/src/liquibaseBinary/lib/jaxb-impl-2.3.0.jar:/usr/local/src/liquibaseBinary/lib/logback-classic-1.2.3.jar:/usr/local/src/liquibaseBinary/lib/logback-core-1.2.3.jar:/usr/local/src/liquibaseBinary/lib/mysql-connector-java-8.0.19.jar:/usr/local/src/liquibaseBinary/lib/slf4j-api-1.7.28.jar:/usr/local/src/liquibaseBinary/lib/snakeyaml-1.24.jar:/usr/local/src/liquibaseBinary/lib\" liquibase.integration.commandline.Main --verbose=true --driver=com.mysql.cj.jdbc.Driver --changeLogFile=medical-consultory/liquibase-outputChangeLog.xml --url=jdbc:mysql://mysqlDb:3306/medical-consultory --username=root --password=root update"
+  
+  zipkin:
+    container_name: zipkin
+    image: "zipkin:zipkin"      
+    ports:
+      - "9411:9411"
+    build:
+      context: ./zipkin-server      
+    networks:      
+      - back-tier
+
+  gateway:
+    image: gateway:gateway
+    container_name: gateway
+    build:
+      context: ./gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - eureka_client_serviceUrl_defaultZone=http://service-discovery:8082/eureka/
+      - spring_zipkin_baseUrl=http://zipkin:9411/
+    networks:      
+      - back-tier
+    command: sh -c "dockerize -wait tcp://patients-service:8084 -timeout 900s -wait-retry-interval 160s java -jar gateway-0.0.1-SNAPSHOT.jar"     
+  
+
+  patients-service:
+    image: patients-service:patients-service
+    container_name: patients-service
+    build:
+      context: ./patients-service
+    ports:
+      - "8084:8084"
+      - "9084:9084"
+    networks:      
+      - back-tier
+    environment:
+      - eureka_client_serviceUrl_defaultZone=http://service-discovery:8082/eureka/
+      - spring_datasource_url=jdbc:mysql://mysqlDb:3306/medical-consultory
+      - spring_datasource_username=root
+      - spring_datasource_password=root
+      - spring_zipkin_baseUrl=http://zipkin:9411/    
+    command: sh -c "dockerize -wait tcp://service-discovery:8082 -wait tcp://mysqlDb:3306 -timeout 900s -wait-retry-interval 160s java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9084 -jar patients-service-0.0.1-SNAPSHOT.jar"     
+  
+
+networks:
+    back-tier:
+      driver: bridge
+  
