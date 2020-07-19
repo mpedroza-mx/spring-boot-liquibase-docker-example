@@ -2,9 +2,9 @@
 
 This spring-boot example is showing a very basic example of a microservice with some features that maybe useful for your project.
 
-- **Liquibase:**  In this project is used to create the table and populate it.
+- **Liquibase:**  This is used to create the table and populate it.
 
-- **PhpMyAdmin:**  This is used to administrate the MySQL DB that it is used. Obviously you could install the MySQL Workbench to the same, but for the purpose of learning I decided to do it through docker.
+- **PhpMyAdmin:**  This is used to manage the MySQL DB that it is used. Obviously you could install the MySQL Workbench to the same, but for the purpose of learning I decided to do it through docker.
   - You can access it using this url: http://{YOUR LOCAL DOCKER URL}:9090/index.php
   
 - **Zipkin:**  In this project may not be very useful because it only has one microservice, but in projects with multiple microservices it would be very useful because it allows you to trace the requests through services.
