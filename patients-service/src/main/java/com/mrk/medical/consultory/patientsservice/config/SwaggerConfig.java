@@ -27,7 +27,7 @@ public class SwaggerConfig {
   private ApiInfo getApiInfo(){
     return new ApiInfo(
         "Spring Boot Microservice Architecture Service Example",
-        "App to demonstrate Saga Pattern using Axon and Spring Boot",
+        "Spring Boot liquibase and docker example",
         "1.0.0",
         "Terms of Service",
         new Contact("Marco Pedroza", "", ""),

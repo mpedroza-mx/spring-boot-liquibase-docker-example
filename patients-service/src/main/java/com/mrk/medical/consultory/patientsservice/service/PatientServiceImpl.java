@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PatientServiceImpl implements PatientService {
 
-  private PatientRepository patientRepository;
-  private FiltersBuilder filtersBuilder;
-  private static final String ACTIVE_STATUS = "y";
+  private final PatientRepository patientRepository;
+  private final FiltersBuilder filtersBuilder;
+  private static final String ACTIVE_STATUS = "Y";
 
   @Autowired
   public PatientServiceImpl(final PatientRepository patientRepository, FiltersBuilder filtersBuilder) {
@@ -37,12 +37,12 @@ public class PatientServiceImpl implements PatientService {
       List<PatientModel> models = patientRepository.findAll(filtersBuilder.buildSpecification(fields,null));
       patients = models
           .stream()
-          .map(model -> fromPatientModelToDto(model))
+          .map(this::fromPatientModelToDto)
           .collect(Collectors.toList());
       return patients;
     } else {
       patients = patientRepository.findAll().stream()
-          .map(model -> fromPatientModelToDto(model))
+          .map(this::fromPatientModelToDto)
           .collect(Collectors.toList());
       return patients;
     }

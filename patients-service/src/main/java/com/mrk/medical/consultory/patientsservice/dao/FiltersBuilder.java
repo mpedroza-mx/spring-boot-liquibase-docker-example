@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,10 +18,8 @@ public class FiltersBuilder {
   public Specification<PatientModel> buildSpecification(Map<String, String> filters,
       Specification<PatientModel> currentSpecification)
       throws InvocationTargetException, IllegalAccessException {
-    Method[] methods = PatientSpecification.class.getMethods();
-    List<Method> methodsList = Arrays.asList(methods);
+    Method[] methodsList = PatientSpecification.class.getMethods();
     Specification<PatientModel> newSpecification = null;
-    Integer counter = 0;
     for (Method method : methodsList) {
       String methodName = method.getName();
       Optional<String> match = filters.keySet()
@@ -55,8 +51,7 @@ public class FiltersBuilder {
       return String.valueOf(inputParam);
     }
     if (clazz == LocalDateTime.class){
-      LocalDateTime dateTime = LocalDateTime.parse(inputParam, DateTimeFormatter.ISO_DATE_TIME);
-      return dateTime;
+      return LocalDateTime.parse(inputParam, DateTimeFormatter.ISO_DATE_TIME);
     }
     return null;
   }

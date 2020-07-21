@@ -33,34 +33,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "patients")
 @Api(value = "patients")
 public class PatientController {
-  private static final Logger LOGGER = LoggerFactory.getLogger(PatientController.class);
 
-  private PatientService patientService;
-  private ObjectMapper objectMapper;
+  private final PatientService patientService;
 
   @Autowired
-  public PatientController(final PatientService patientService, final ObjectMapper objectMapper) {
+  public PatientController(final PatientService patientService) {
     this.patientService = patientService;
-    this.objectMapper = objectMapper;
   }
 
   @GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE)
   @CrossOrigin(origins = "http://localhost:3000")
-  public ResponseEntity getPatients(@RequestParam(required = false) Map<String,String> params)
+  public ResponseEntity<List<PatientDto>> getPatients(@RequestParam(required = false) Map<String,String> params)
       throws InvocationTargetException, IllegalAccessException {
     List<PatientDto> patients = patientService.findAllPatients(params);
     if (patients.size() > 0 && StringUtils.isNotEmpty(params.get("fields"))){
       ObjectMapper objectMapper = Squiggly.init(new ObjectMapper(), params.get("fields"));
       patients = SquigglyUtils.listify(objectMapper, patients, PatientDto.class);
     }
-    ResponseEntity<List<PatientDto>> response = ResponseEntity.ok()
+    return ResponseEntity.ok()
         .body(patients);
-    return response;
   }
 
   @GetMapping(path="/{patientId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @CrossOrigin(origins = "http://localhost:3000")
-  public ResponseEntity getPatientById(@PathVariable(name = "patientId")long patientId){
+  public ResponseEntity<PatientDto> getPatientById(@PathVariable(name = "patientId")long patientId){
     PatientDto patientDto = patientService.findPatientById(patientId);
     if (Optional.ofNullable(patientDto).isPresent()) {
       return ResponseEntity.ok().body(patientDto);
